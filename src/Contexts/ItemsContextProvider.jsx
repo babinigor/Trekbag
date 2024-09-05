@@ -68,6 +68,7 @@ export default function ItemsContextProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("items", JSON.stringify(items));
   }, [items]);
+
   return (
     <ItemsContext.Provider
       value={{

@@ -1,10 +1,10 @@
-import { useContext } from "react";
+import { useItemsStore } from "../stores/itemsStore";
 import Counter from "./Counter";
 import Logo from "./Logo";
-import { ItemsContext } from "../Contexts/ItemsContextProvider";
 
 export default function Header() {
-  const { items } = useContext(ItemsContext);
+  const items = useItemsStore((state) => state.items);
+
   return (
     <header>
       <Logo />

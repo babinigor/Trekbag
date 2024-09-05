@@ -1,7 +1,7 @@
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import EmptyView from "./EmptyView";
 import Select from "react-select";
-import { ItemsContext } from "../Contexts/ItemsContextProvider";
+import { useItemsStore } from "../stores/itemsStore";
 
 const sortingOptions = [
   { value: "default", label: "По-умолчанию" },
@@ -13,8 +13,11 @@ const sortingOptions = [
 ];
 
 export default function ItemList() {
+  const items = useItemsStore((state) => state.items);
+  const removeItem = useItemsStore((state) => state.removeItem);
+  const markItem = useItemsStore((state) => state.markItem);
+
   const [sortBy, setSortBy] = useState("default");
-  const { items, handleMarkItem, handleRemoveItem } = useContext(ItemsContext);
 
   const sortedItems = useMemo(
     () =>
@@ -62,8 +65,8 @@ export default function ItemList() {
           <Item
             key={item.id}
             item={item}
-            onRemoveItem={handleRemoveItem}
-            onMarkItem={handleMarkItem}
+            onRemoveItem={removeItem}
+            onMarkItem={markItem}
           />
         );
       })}
