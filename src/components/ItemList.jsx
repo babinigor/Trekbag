@@ -1,25 +1,38 @@
-import { useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import EmptyView from "./EmptyView";
 import Select from "react-select";
+import { ItemsContext } from "../Contexts/ItemsContextProvider";
 
 const sortingOptions = [
   { value: "default", label: "По-умолчанию" },
   { value: "packed", label: "Сначала отмеченные" },
   { value: "unpacked", label: "Сначала неотмеченные" },
+  { value: "name", label: "По имени" },
+  { value: "only-packed", label: "Только отмеченные" },
+  { value: "only-unpacked", label: "Только неотмеченные" },
 ];
 
-export default function ItemList({ items, handleRemoveItem, handleMarkItem }) {
+export default function ItemList() {
   const [sortBy, setSortBy] = useState("default");
+  const { items, handleMarkItem, handleRemoveItem } = useContext(ItemsContext);
 
-  const sortedItems = [...items].sort((a, b) => {
-    if (sortBy === "packed") {
-      return b.packed - a.packed;
-    }
-    if (sortBy === "unpacked") {
-      return a.packed - b.packed;
-    }
-    return;
-  });
+  const sortedItems = useMemo(
+    () =>
+      [...items].sort((a, b) => {
+        if (sortBy === "packed") {
+          return b.packed - a.packed;
+        }
+        if (sortBy === "unpacked") {
+          return a.packed - b.packed;
+        }
+        if (sortBy === "name") {
+          return a.name.localeCompare(b.name);
+        }
+        return;
+      }),
+    [items, sortBy]
+  );
+
   return (
     <ul className="item-list">
       {items.length === 0 && <EmptyView />}
@@ -34,14 +47,26 @@ export default function ItemList({ items, handleRemoveItem, handleMarkItem }) {
           />
         </section>
       )}
-      {sortedItems.map((item) => (
-        <Item
-          key={item.id}
-          item={item}
-          onRemoveItem={handleRemoveItem}
-          onMarkItem={handleMarkItem}
-        />
-      ))}
+      {sortedItems.map((item) => {
+        if (sortBy === "only-packed") {
+          if (!item.packed) {
+            return;
+          }
+        }
+        if (sortBy === "only-unpacked") {
+          if (item.packed) {
+            return;
+          }
+        }
+        return (
+          <Item
+            key={item.id}
+            item={item}
+            onRemoveItem={handleRemoveItem}
+            onMarkItem={handleMarkItem}
+          />
+        );
+      })}
     </ul>
   );
 }
