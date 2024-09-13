@@ -4,4 +4,4 @@
 <a href="https://babinigor.github.io/Trekbag/"><img src="https://github.com/user-attachments/assets/af0bce3e-e237-4eae-a597-650086ed5771"/></a>
 
 ## How to use
-
+This web application allows users to ensure that they do not forget any items. Users can add items that they intend to bring and mark them as "picked" to indicate that they have not forgotten them. Even if the user refreshes the page, the items will remain in place and will not be deleted.
